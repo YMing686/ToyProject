@@ -9,7 +9,7 @@ git add .
 git commit -m "Initial commit"
 git push -u origin main
 
-# For submodules
+# Remove submodules
 rm -rf {submodule_name}/.git
 rm -f .gitmodules
 git add {submodule_name}

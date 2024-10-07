@@ -1,0 +1,37 @@
+services:
+  auth-db:
+    image: postgres:latest
+    networks:
+      - project-network
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "1001:5432"
+    volumes:
+      - pg_auth_db:/var/lib/postgresql/data
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    networks:
+      - project-network
+    depends_on:
+      - auth-db
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/authdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    restart: on-failure
+
+networks:
+  project-network:
+    driver: bridge
+
+volumes:
+  pg_auth_db:
+    driver: local
