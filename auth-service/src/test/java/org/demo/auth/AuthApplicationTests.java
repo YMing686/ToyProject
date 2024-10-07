@@ -1,10 +1,10 @@
-package org.demo.toyprojects;
+package org.demo.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ToyProjectsApplicationTests {
+class AuthApplicationTests {
 
   @Test
   void contextLoads() {
