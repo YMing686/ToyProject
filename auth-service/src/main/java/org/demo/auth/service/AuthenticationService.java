@@ -21,15 +21,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-  private final AccountRepository accountRepository;
-
-  private final JwtTokenProvider jwtTokenProvider;
-
-  private final AuthenticationManager authenticationManager;
-
-  private final PasswordEncoder passwordEncoder;
 
   private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+  private final AccountRepository accountRepository;
+  private final JwtTokenProvider jwtTokenProvider;
+  private final AuthenticationManager authenticationManager;
+  private final PasswordEncoder passwordEncoder;
 
   // TODO: Replace it with a more secure way to store passwords Like RSA
   private String getDecodedPassword(String password) {
@@ -38,9 +35,11 @@ public class AuthenticationService {
 
   @Transactional
   public RegisterResponse register(RegisterRequest request) throws Exception {
-    Optional<Account> existingAccount = this.accountRepository.findByUsername(request.getUsername());
+    Optional<Account> existingAccount = this.accountRepository.findByUsername(
+        request.getUsername());
     if (existingAccount.isPresent()) {
-      logger.warn("Registration failed: User already exists with username: {}", request.getUsername());
+      logger.warn("Registration failed: User already exists with username: {}",
+          request.getUsername());
       throw new RuntimeException("User already exist");
     }
     Account savedAccount = Account.builder()

@@ -19,7 +19,7 @@ public class JwtTokenProvider {
   private static final String KEY_PASSWORD = "password";          // Private key password (same as keypass during generation)
   private static final Long EXPIRATION_TIME = 86400000L;          // Token expiration time (1 day)
 
-  private KeyStore keyStore;
+  private final KeyStore keyStore;
 
   // Load keystore
   public JwtTokenProvider() throws Exception {

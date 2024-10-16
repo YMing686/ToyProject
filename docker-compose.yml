@@ -20,12 +20,27 @@ services:
       - project-network
     depends_on:
       - auth-db
+      - eureka-server
     ports:
       - "8090:8090"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/authdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
+    restart: on-failure
+
+  eureka-server:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    networks:
+      - project-network
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
     restart: on-failure
 
 networks:

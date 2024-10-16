@@ -32,16 +32,19 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .securityMatcher("/api/**")
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/v1/account/login", "/api/v1/account/register").permitAll() // Public endpoints
+            .requestMatchers("/api/v1/account/login", "/api/v1/account/register")
+            .permitAll() // Public endpoints
             .requestMatchers("/api/v1/demo/**").hasRole("ADMIN")  // Role-based access
             .anyRequest().authenticated())
         .addFilterBefore(this.jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-        .exceptionHandling((exception)-> exception.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+        .exceptionHandling((exception) -> exception.authenticationEntryPoint(
+            new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
         .build();
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+      throws Exception {
     return configuration.getAuthenticationManager();
   }
 

@@ -42,6 +42,7 @@ class JwtTokenProviderTest {
     boolean isValid = jwtTokenProvider.validateToken(token);
     assertTrue(isValid);
   }
+
   @Test
   void testInvalidToken() {
     String invalidToken = "invalid.token.here";
