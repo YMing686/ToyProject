@@ -36,3 +36,22 @@
 6. If the request is unauthenticated or the token is invalid and the user tries to access a
    protected resource, the HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED) triggers and returns a 401
    Unauthorized response to the client.
+
+### Login and Registration
+#### During Registration:
+- Client sends a Base64-encoded password.
+- Backend decodes the password (from Base64).
+- Backend hashes the decoded password using BCryptPasswordEncoder.
+- Backend saves the hashed password to the database.
+
+#### During Login:
+- Client sends a Base64-encoded password.
+- Backend decodes the password (from Base64).
+- Backend retrieves the account and the hashed password from the database.
+- Backend uses BCryptPasswordEncoder.matches(decodedPassword, hashedPassword) to check if the decoded password matches the stored hashed password.
+
+#### Password Encoding
+When you hash a password with BCrypt, it automatically generates a random salt (a random value that is combined with the password before hashing). This ensures that even if two users have the same password, their hashed values will be different.
+BCrypt is designed to be computationally expensive. This slows down brute-force attacks. BCrypt performs one-way hashing, meaning that once a password is hashed, it cannot be decrypted back to the original password. This makes it secure, as the original password is never stored in the database—only the hashed version is.
+
+Plain-text passwords (i.e., storing passwords without hashing) are extremely insecure. If attackers access your database, they can see all user passwords. Hashing passwords before storing them ensures that even if your database is compromised, the passwords remain secure.
