@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### KeyStore files ###
-.jks
+*.jks
