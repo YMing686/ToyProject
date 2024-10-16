@@ -1,6 +1,5 @@
 package org.demo.auth.utils;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,12 +47,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid access token");
         return;
       }
-    } catch (ExpiredJwtException e) {
+    } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access token expired");
       return;
     }
 
-    username = this.jwtTokenProvider.extractUsername(jwt);
+    try {
+      username = this.jwtTokenProvider.extractUsername(jwt);
+    } catch (Exception e) {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid access token");
+      return;
+    }
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
       UserDetails userDetails = this.accountService.loadUserByUsername(username);
       UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

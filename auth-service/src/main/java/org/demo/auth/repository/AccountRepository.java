@@ -1,7 +1,7 @@
 package org.demo.auth.repository;
 
 import java.util.Optional;
-import org.demo.auth.model.Account;
+import org.demo.auth.model.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

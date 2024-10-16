@@ -1,9 +1,9 @@
 package org.demo.auth.service;
 
 import java.util.List;
-import org.demo.auth.model.Account;
+import lombok.RequiredArgsConstructor;
+import org.demo.auth.model.entity.Account;
 import org.demo.auth.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,10 +12,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
 
-  @Autowired
-  private AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

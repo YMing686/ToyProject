@@ -1,6 +1,5 @@
-package org.demo.auth.model;
+package org.demo.auth.model.entity;
 
-import lombok.Data;
 import lombok.Getter;
 
 @Getter
@@ -24,5 +23,14 @@ public enum Role {
       }
     }
     throw new IllegalArgumentException("Invalid role id: " + id);
+  }
+
+  public static short getIdByRole(String name) {
+    for (Role role : Role.values()) {
+      if (role.getName().equals(name)) {
+        return role.id;
+      }
+    }
+    throw new IllegalArgumentException("Invalid role name: " + name);
   }
 }
