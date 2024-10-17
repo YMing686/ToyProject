@@ -3,6 +3,8 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - JwtAuthenticationFilter
       discovery:
         locator:
           enabled: true  # Enables automatic service discovery for routing
