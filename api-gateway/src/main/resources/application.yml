@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # Enables automatic service discovery for routing
+      routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE   # Load-balanced call to the auth-service
+          predicates:
+            - Path=/auth/**         # Route requests starting with /auth to auth-service
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetchRegistry: true
+    registerWithEureka: true
