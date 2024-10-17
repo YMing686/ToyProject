@@ -52,7 +52,8 @@ public class AuthenticationService {
     savedAccount = this.accountRepository.save(savedAccount);
     logger.info("Account successfully created for user: {}", request.getUsername());
 
-    String jwtToken = this.jwtTokenProvider.generateToken(savedAccount.getUsername());
+    String jwtToken = this.jwtTokenProvider.generateToken(
+        savedAccount.getAccountId(), savedAccount.getUsername(), savedAccount.getPermission());
     logger.debug("JWT token generated for user: {}", request.getUsername());
 
     return new RegisterResponse(jwtToken);
@@ -89,7 +90,8 @@ public class AuthenticationService {
     );
 
     // Generate JWT token
-    String jwtToken = this.jwtTokenProvider.generateToken(account.getUsername());
+    String jwtToken = this.jwtTokenProvider.generateToken(account.getAccountId(),
+        account.getUsername(), account.getPermission());
     logger.info("JWT token generated for user: {}", request.getUsername());
 
     return new RegisterResponse(jwtToken);

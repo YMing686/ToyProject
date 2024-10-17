@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
+
   private static final String KEYSTORE_FILE = "jwtkeystore.jks";
   private static final String KEY_ALIAS = "jwtkey";
   private static final String KEYSTORE_PASSWORD = "password";
@@ -46,11 +47,18 @@ public class JwtAuthenticationFilter implements WebFilter {
           .setSigningKey(getPublicKey())
           .parseClaimsJws(token)
           .getBody();
-      exchange.getAttributes().put("claims", claims);
+      String userId = claims.get("id", String.class);
+      String roles = claims.get("role", String.class);
+
+      ServerWebExchange mutatedExchange = exchange.mutate()
+          .request(r -> r
+              .header("userId", userId)
+              .header("roles", roles))
+          .build();
+      return chain.filter(mutatedExchange);
     } catch (Exception e) {
       exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
       return exchange.getResponse().setComplete();
     }
-    return chain.filter(exchange);
   }
 }

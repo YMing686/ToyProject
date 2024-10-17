@@ -21,7 +21,7 @@ class JwtTokenProviderTest {
   @Test
   void testGenerateToken() throws Exception {
     String username = "testuser";
-    String token = jwtTokenProvider.generateToken(username);
+    String token = jwtTokenProvider.generateToken(1, username, (short) 0);
     assertNotNull(token);
     System.out.println("Generated Token: " + token);
   }
@@ -29,7 +29,7 @@ class JwtTokenProviderTest {
   @Test
   void testExtractUsername() throws Exception {
     String username = "testuser";
-    String token = jwtTokenProvider.generateToken(username);
+    String token = jwtTokenProvider.generateToken(1, username, (short) 0);
 
     String extractedUsername = jwtTokenProvider.extractUsername(token);
     assertEquals(username, extractedUsername);
@@ -37,7 +37,7 @@ class JwtTokenProviderTest {
 
   @Test
   void testValidateToken() throws Exception {
-    String token = jwtTokenProvider.generateToken("testuser");
+    String token = jwtTokenProvider.generateToken(1, "testuser", (short) 0);
 
     boolean isValid = jwtTokenProvider.validateToken(token);
     assertTrue(isValid);

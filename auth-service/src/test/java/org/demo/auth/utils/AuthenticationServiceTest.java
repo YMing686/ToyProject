@@ -24,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class AuthenticationServiceTest {
@@ -60,9 +59,15 @@ public class AuthenticationServiceTest {
 
     when(accountRepository.findByUsername("testuser")).thenReturn(Optional.empty());
     when(passwordEncoder.encode(any(String.class))).thenReturn("encoded-password");
-    when(accountRepository.save(any(Account.class))).thenAnswer(
-        invocation -> invocation.getArgument(0));
-    when(jwtTokenProvider.generateToken("testuser")).thenReturn("jwt-token");
+    when(accountRepository.save(any(Account.class))).thenReturn(
+        Account.builder()
+            .accountId(1)
+            .username("testuser")
+            .password("encoded-password")
+            .permission((short) 0)
+            .build()
+    );
+    when(jwtTokenProvider.generateToken(1, "testuser", (short) 0)).thenReturn("jwt-token");
 
     // When
     RegisterResponse response = authenticationService.register(request);
@@ -100,13 +105,16 @@ public class AuthenticationServiceTest {
     request.setPassword(Base64.getEncoder().encodeToString("password".getBytes()));
 
     Account account = Account.builder()
+        .accountId(1)
         .username("testuser")
-        .password("encoded-password")  // Store the encoded password
+        .password("encoded-password")
+        .permission((short) 0)
         .build();
 
     when(accountRepository.findByUsername("testuser")).thenReturn(Optional.of(account));
-    when(passwordEncoder.matches(any(CharSequence.class), any(String.class))).thenReturn(true);  // Simulate password match
-    when(jwtTokenProvider.generateToken("testuser")).thenReturn("jwt-token");
+    when(passwordEncoder.matches(any(CharSequence.class), any(String.class))).thenReturn(
+        true);  // Simulate password match
+    when(jwtTokenProvider.generateToken(1, "testuser", (short) 0)).thenReturn("jwt-token");
 
     // When
     RegisterResponse response = authenticationService.login(request);
@@ -130,7 +138,8 @@ public class AuthenticationServiceTest {
         .build();
 
     when(accountRepository.findByUsername("testuser")).thenReturn(Optional.of(account));
-    when(passwordEncoder.matches(any(CharSequence.class), any(String.class))).thenReturn(false);  // Simulate password mismatch
+    when(passwordEncoder.matches(any(CharSequence.class), any(String.class))).thenReturn(
+        false);  // Simulate password mismatch
 
     // When & Then
     Exception exception = assertThrows(RuntimeException.class, () -> {

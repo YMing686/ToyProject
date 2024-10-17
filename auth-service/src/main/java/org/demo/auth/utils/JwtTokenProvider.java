@@ -40,9 +40,11 @@ public class JwtTokenProvider {
   }
 
   // Generate JWT with RSA signature (RS256)
-  public String generateToken(String username) throws Exception {
+  public String generateToken(Integer id, String username, Short permission) throws Exception {
     Map<String, Object> claims = new HashMap<>();
     claims.put("username", username);
+    claims.put("id", id);
+    claims.put("role", permission);
     return Jwts.builder()
         .setClaims(claims)
         .setSubject(username)
